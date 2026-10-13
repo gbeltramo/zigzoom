@@ -4,8 +4,8 @@ const zz = @import("zigzoom");
 const Vec3 = zz.math.Vec3;
 const Ray = zz.math.Ray;
 
-const image_width = 400;
-const image_height = 225; // 16:9
+const image_width = 800;
+const image_height = 450; // 16:9
 
 fn rayColor(ray: Ray, s: zz.sphere.Sphere) Vec3 {
     if (s.hit(ray)) |t| {

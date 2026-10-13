@@ -9,3 +9,5 @@ AGENTS.md
 /build/
 /.zig-cache/
 /zig-out/
+
+!/images/sphere.png
