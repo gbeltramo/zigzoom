@@ -1,0 +1,10 @@
+*~
+*.log
+*.db
+*.ppm
+AGENTS.md
+
+/dist/
+/build/
+/.zig-cache/
+/zig-out/

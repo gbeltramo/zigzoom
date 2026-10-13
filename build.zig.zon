@@ -1,0 +1,15 @@
+.{
+    .name = .zigzoom,
+    .version = "0.0.1",
+    .fingerprint = 0x47f203bc1aef5737,
+    .minimum_zig_version = "0.17.0",
+    .dependencies = .{
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "LICENSE",
+        "README.md",
+    },
+}
