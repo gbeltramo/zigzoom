@@ -1,6 +1,8 @@
 const std = @import("std");
 const Vec3 = @import("math.zig").Vec3;
 
+const png = @import("png.zig");
+
 /// Linear RGB, one Vec3 per pixel (x=r, y=g, z=b), row-major, top row first.
 pub const Image = struct {
     width: usize,
@@ -29,6 +31,18 @@ pub const Image = struct {
             try out.print(gpa, "{d} {d} {d}\n", .{ toByte(p.x), toByte(p.y), toByte(p.z) });
         }
     }
+
+    /// Appends the image as a PNG file to `out`.
+    pub fn writePng(self: Image, gpa: std.mem.Allocator, out: *std.ArrayList(u8)) !void {
+        const bytes = try gpa.alloc(u8, self.pixels.len * 3);
+        defer gpa.free(bytes);
+        for (self.pixels, 0..) |p, i| {
+            bytes[i * 3] = toByte(p.x);
+            bytes[i * 3 + 1] = toByte(p.y);
+            bytes[i * 3 + 2] = toByte(p.z);
+        }
+        try png.encodeRgb8(gpa, self.width, self.height, bytes, out);
+    }
 };
 
 fn toByte(v: f32) u8 {
@@ -47,4 +61,17 @@ test "ppm header and one pixel" {
     try img.writePpm(gpa, &out);
 
     try std.testing.expectEqualStrings("P3\n1 1\n255\n255 0 127\n", out.items);
+}
+
+
+test "png output starts with the PNG signature" {
+    const gpa = std.testing.allocator;
+    var img = try Image.init(gpa, 2, 2);
+    defer img.deinit(gpa);
+
+    var out: std.ArrayList(u8) = .empty;
+    defer out.deinit(gpa);
+    try img.writePng(gpa, &out);
+
+    try std.testing.expectEqualSlices(u8, "\x89PNG\r\n\x1a\n", out.items[0..8]);
 }

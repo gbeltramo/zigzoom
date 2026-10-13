@@ -49,13 +49,13 @@ pub fn main(init: std.process.Init) !void {
         }
     }
 
-    var ppm: std.ArrayList(u8) = .empty;
-    defer ppm.deinit(gpa);
-    try img.writePpm(gpa, &ppm);
+    var png_bytes: std.ArrayList(u8) = .empty;
+    defer png_bytes.deinit(gpa);
+    try img.writePng(gpa, &png_bytes);
 
-    // Write the PPM to stdout; redirect it to a file when you run.
+    // Write the PNG to stdout; redirect it to a file when you run.
     var buf: [4096]u8 = undefined;
     var stdout = std.Io.File.stdout().writer(io, &buf);
-    try stdout.interface.writeAll(ppm.items);
+    try stdout.interface.writeAll(png_bytes.items);
     try stdout.interface.flush();
 }
